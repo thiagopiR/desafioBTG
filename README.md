@@ -2,8 +2,8 @@
 
 ### Comentários
 
-Utilizei das bibliotecas Shapely e Matplotlib, para a criação do polígono e para a visualização em forma de gráfico das precipitações acumuladas.
-No início, enfrentei alguma dificuldade em confirmar se minha abordagem estava correta. Para deixar um pouco mais fácil a visualização, utilizei da biblioteca Matplotlib para conseguir visualizar tanto o contorno quanto os pontos dentro dele. Essa visualização, embora não integrada ao projeto final, trouxe confiança adicional à minha solução, que até então existia apenas no código.
+Utilizei das bibliotecas Shapely e Matplotlib, para a criação do polígono e para a criação do gráfico das precipitações acumuladas.
+No início, enfrentei alguma dificuldade em confirmar se minha abordagem estava correta. Para deixar um pouco mais fácil a visualização, utilizei da biblioteca Matplotlib para conseguir observar tanto o contorno quanto os pontos dentro dele. Essa visualização, embora não integrada ao projeto final, trouxe confiança adicional à minha solução, que até então existia apenas no código.
 Ainda nesse aspecto, resolvi me aventurar um pouco nos testes unitários, algo que eu nunca tinha feito em Python. Acredito que consegui abranger uma gama interessante de testes para as funções utilizadas, dando-me ainda mais confiança na finalização do projeto.
 
 ### Decisão das bibliotecas
