@@ -47,6 +47,10 @@ Quanto ao Matplotlib, escolhi utilizá-lo por ser a biblioteca mais popular em P
    python test_main.py
    ```
 
+## O resultado
+
+![Previsão de Precipitação](previsao_precipitacao.png "Previsão de Precipitação")
+
 ## O desafio
 
 ### Introdução
