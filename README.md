@@ -16,7 +16,7 @@ Quanto ao Matplotlib, escolhi utilizá-lo por ser a biblioteca mais popular em P
 
 #### Pré-requisitos
 
-- Certifique-se de ter o Python instalado em seu sistema. Você pode baixá-lo em [python.org](https://www.python.org/).
+- Certifique-se de ter o Python instalado em seu sistema. Você pode baixá-lo [aqui](https://www.python.org/).
 
 #### Passos
 
