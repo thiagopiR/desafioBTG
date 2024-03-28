@@ -79,7 +79,7 @@ def make_graph(arquivos_forecast: list, precipitacao_media_por_arquivo: list) ->
     # Calcula a acumulação da precipitação ao longo dos dias
     precipitacao_acumulada = np.cumsum(precipitacao_media_por_arquivo)
     
-    # Adiciona a linha de acumulação ao gráfico
+    # Adiciona a linha de precipitação acumulada ao gráfico
     ax1.plot(arquivos_forecast, precipitacao_acumulada, color='r', marker='o', linestyle='-')
 
     # Adiciona os valores da precipitação acumulada sobre os pontos da linha
