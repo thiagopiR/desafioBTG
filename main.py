@@ -86,6 +86,10 @@ def make_graph(arquivos_forecast: list, precipitacao_media_por_arquivo: list) ->
     for i, valor in enumerate(precipitacao_acumulada):
         ax1.annotate(f'{valor:.2f}', (arquivos_forecast[i], valor), textcoords="offset points", xytext=(0,10), ha='center')
 
+    # Adiciona os valores da média diária sobre as barras
+    for i, valor in enumerate(precipitacao_media_por_arquivo):
+        ax1.text(i, valor, f'{valor:.2f}', ha='center', va='bottom')
+
     # Modificação visual no gráfico, para mostrar apenas a data da previsão no eixo X, e não o nome do arquivo todo
     datas_previsao = [
         f"{arquivo[-10:-8]}/{arquivo[-8:-6]}" for arquivo in arquivos_forecast
