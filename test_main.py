@@ -8,7 +8,7 @@ from main import (
     read_data_file,
     read_contour_file,
     apply_contour,
-    calc_precipitacao_acumulada,
+    calc_precipitacao_media,
 )
 
 class TestMain(unittest.TestCase):
@@ -90,9 +90,9 @@ class TestMain(unittest.TestCase):
       self.assertFalse(point.within(Polygon(contour_df[["lat", "long"]].values)))
 
 
-  def test_calc_precipitacao_acumulada(self):
+  def test_calc_precipitacao_media(self):
     # Criar um mock para o DataFrame de contorno
-    contour_df_mock = pd.DataFrame(
+    contour_df = pd.DataFrame(
         {"lat": [-45, -45, -35, -35, -45], "long": [-75, -70, -70, -75, -75]}
     )
 
@@ -112,13 +112,13 @@ class TestMain(unittest.TestCase):
               f.write(content)
           file_paths.append(file_path)
 
-      # Chamar a função calc_precipitacao_acumulada com os arquivos mocks
-      precipitacao_acumulada_por_arquivo = calc_precipitacao_acumulada(contour_df_mock, temp_dir)
+      # Chamar a função calc_precipitacao_media com os arquivos mocks
+      precipitacao_media_por_arquivo = calc_precipitacao_media(contour_df, temp_dir)
 
-      # Verificar os resultados da precipitação acumulada para cada arquivo
-      self.assertEqual(precipitacao_acumulada_por_arquivo[0], 0.5) 
-      self.assertEqual(precipitacao_acumulada_por_arquivo[1], 0.4)
-      self.assertEqual(precipitacao_acumulada_por_arquivo[2], 0.4)
+      # Verificar os resultados da precipitação acumulada média para cada arquivo
+      self.assertAlmostEqual(precipitacao_media_por_arquivo[0], 0.1667, places=4)
+      self.assertAlmostEqual(precipitacao_media_por_arquivo[1], 0.2, places=4)
+      self.assertAlmostEqual(precipitacao_media_por_arquivo[2], 0.1333, places=4)
 
 
 if __name__ == "__main__":
