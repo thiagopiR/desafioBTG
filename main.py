@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import os
+import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Point, Polygon
 
@@ -45,14 +46,14 @@ def apply_contour(contour_df: pd.DataFrame, data_df: pd.DataFrame) -> pd.DataFra
     return data_inside_contour
 
 
-def calc_precipitacao_acumulada(contour_df: pd.DataFrame, forecast_dir: str) -> list:
+def calc_precipitacao_media(contour_df: pd.DataFrame, forecast_dir: str) -> list:
     # Lista todos os arquivos na pasta de previsões que terminam com .dat
     arquivos_forecast = [
         arquivo for arquivo in os.listdir(forecast_dir) if arquivo.endswith(".dat")
     ]
 
     # Lista para armazenar a precipitação acumulada para cada arquivo
-    precipitacao_acumulada_por_arquivo = []
+    precipitacao_media_por_arquivo = []
 
     for arquivo in arquivos_forecast:
         # Constrói o caminho completo do arquivo e realiza a leitura do mesmo
@@ -62,21 +63,28 @@ def calc_precipitacao_acumulada(contour_df: pd.DataFrame, forecast_dir: str) -> 
         # Aplica o contorno aos dados para obter apenas os pontos dentro da região de interesse
         data_inside_contour = apply_contour(contour_df=contour_df, data_df=data_df)
 
-        # Calcula a precipitação acumulada para a região e a adiciona à lista
-        precipitacao_acumulada_por_arquivo.append(
-            data_inside_contour["data_value"].sum()
-        )
-    return precipitacao_acumulada_por_arquivo
+        # Calcula a média de precipitação para a região e a adiciona à lista
+        precipitacao_media = data_inside_contour['data_value'].mean()
+        precipitacao_media_por_arquivo.append(precipitacao_media)
+    return precipitacao_media_por_arquivo
 
 
-def make_graph(
-    arquivos_forecast: list, precipitacao_acumulada_por_arquivo: list
-) -> None:
-    # Cria um novo gráfico de barras
-    plt.figure(figsize=(10, 6))
-
+def make_graph(arquivos_forecast: list, precipitacao_media_por_arquivo: list) -> None:
+    # Cria um novo gráfico
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
     # Plota as barras no gráfico
-    plt.bar(arquivos_forecast, precipitacao_acumulada_por_arquivo)
+    ax1.bar(arquivos_forecast, precipitacao_media_por_arquivo, color='b')
+    
+    # Calcula a acumulação da precipitação ao longo dos dias
+    precipitacao_acumulada = np.cumsum(precipitacao_media_por_arquivo)
+    
+    # Adiciona a linha de acumulação ao gráfico
+    ax1.plot(arquivos_forecast, precipitacao_acumulada, color='r', marker='o', linestyle='-')
+
+    # Adiciona os valores da precipitação acumulada sobre os pontos da linha
+    for i, valor in enumerate(precipitacao_acumulada):
+        ax1.annotate(f'{valor:.2f}', (arquivos_forecast[i], valor), textcoords="offset points", xytext=(0,10), ha='center')
 
     # Modificação visual no gráfico, para mostrar apenas a data da previsão no eixo X, e não o nome do arquivo todo
     datas_previsao = [
@@ -85,18 +93,23 @@ def make_graph(
     plt.xticks(range(len(arquivos_forecast)), datas_previsao)
 
     # Adiciona rótulos aos eixos e título ao gráfico
-    plt.xlabel("2021")
-    plt.ylabel("Precipitação acumulada (em mm)")
-    plt.title(
-        "Previsão de precipitação acumulada (modelo ETA 01/12/21) para a região da usina Hidrelétrica Camargos"
-    )
+    ax1.set_xlabel('2021')
+    ax1.set_ylabel('Precipitação média (em mm)')
+    ax1.set_title('Previsão de precipitação média acumulada (modelo ETA 01/12/21) para a região da usina Hidrelétrica Camargos')
+
+    # Margem para que o valor final da precipitação acumulada não ultrapasse as bordas do gráfico.
+    max_precipitacao = max(precipitacao_acumulada)
+    margin = max_precipitacao * 0.10 
+    ax1.set_ylim(0, max_precipitacao + margin)
+
+    # Exibe o gráfico
     plt.show()
 
 
 def main() -> None:
     contour_df: pd.DataFrame = read_contour_file("PSATCMG_CAMARGOS.bln")
     forecast_dir = "forecast_files"
-    precipitacao_acumulada_por_arquivo = calc_precipitacao_acumulada(
+    precipitacao_acumulada_por_arquivo = calc_precipitacao_media(
         contour_df, forecast_dir
     )
     arquivos_forecast = [
